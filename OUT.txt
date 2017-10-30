@@ -1,0 +1,4 @@
+www.neti.eee: kool: YES
+www.online.ee: reklaam: YES
+www.seti.ee: maja: YES
+www.oper.ru: Missing info: NO
