@@ -13,20 +13,7 @@ import urllib.request
 from urllib.request import urlopen
 
 
-# Check if parameter qty is correct
-if len(sys.argv) != 1:
-    print("Usage:\n ./mtseljab.py [INPUT FILE] [OUTPUT FILE]")
-    exit(1)
-
-input_file_arg = "IN.txt"
-output_file_arg = "OUT.txt"
-input_lines_list = []
-
-
 # http://pythoncentral.io/reading-and-writing-to-files-in-python/
-# Open file, read lines, split it by comma, and save pairs to list
-
-
 def clear_out_file():
     try:
         file = open(output_file_arg, "w")
@@ -37,7 +24,17 @@ def clear_out_file():
         exit(1)
 
 
-clear_out_file()
+# Open file, read lines, split it by comma, and save pairs to list
+def parse_input_file_to_list():
+    try:
+        input_file_object = open(input_file_arg, "r")
+    except FileNotFoundError as e:
+        print("I/O error({0}): {1}".format(e.errno, e.strerror))
+        exit(1)
+    for line in input_file_object:
+        input_lines_list.append(line.strip().split(","))
+    input_file_object.close()
+    return input_lines_list
 
 
 def writefile(string):
@@ -50,46 +47,71 @@ def writefile(string):
         exit(1)
 
 
-# Open input file & # Open input file
-try:
-    input_file_object = open(input_file_arg, "r")
-except FileNotFoundError as e:
-    print("I/O error({0}): {1}".format(e.errno, e.strerror))
-    exit(1)
-for line in input_file_object:
-    input_lines_list.append(line.strip().split(","))
-input_file_object.close()
+def open_read_url(URL):
+    try:
+        response = urlopen(URL)
+        # print(response.info())
+        html = response.read()
+        response.close()
+        return html
+    except urllib.error.HTTPError as error:
+        print("HTTP Connection error ({0}): {1}: {2}".format(error.reason, error.reason, error.headers))
+    except urllib.error.URLError as error:
+        print("Oops. URL {0} error occured: {1}\n".format(item[0], error.reason))
 
-# Check items in list, if missing info - display error meesage
+
+# Add "http://" if it's missing, then try to open URL. Handle HTTP and URL errors.
+def create_correct_URL(input_link):
+    if str(input_link).startswith("http://"):
+        URL = input_link
+    else:
+        URL = "http://" + input_link
+    return URL
+
+
+def search_html(html, word):
+    result = ""
+    string = str(html)
+    if string.find(word) != -1:
+        result = "YES"
+    else:
+        result = "NO"
+    return result
+
+
+# ------------------------ ENGINE -------------------------
+
+# Check if parameter qty is correct
+if len(sys.argv) != 1:
+    print("Usage:\n ./mtseljab.py [INPUT FILE] [OUTPUT FILE]")
+    exit(1)
+
+input_file_arg = "IN.txt"
+output_file_arg = "OUT.txt"
+input_lines_list = []
+
+# Start run with clearing OUT file
+clear_out_file()
+
+# Try to parse input file
+input_lines_list = parse_input_file_to_list()
+
+# Check if data is present and search in html
 for item in input_lines_list:
-    if len(item) != 2:
+    if len(item) == 2:
+        URL = create_correct_URL(item[0])
+        HTML = open_read_url(URL)
+        if HTML == None:
+            print("URL {0} is incorrect or cannot be reached".format(URL))
+        else:
+            result = search_html(HTML, item[1])
+            out_line = "{0}: {1}: {2}\n".format(item[0], item[1], result)
+            writefile(out_line)
+    else:
         result = "NO"
         out_line = "%s: %s: %s\n" % (item[0], "Missing info", result)
         writefile(out_line)
-    else:
-        result = "YES"
-        out_line = "{0}: {1}: {2}\n".format(item[0], item[1], result)
-        writefile(out_line)
 
-# https://khashtamov.com/ru/python-requests/
-for item in input_lines_list:
-    if str(item[0]).startswith("http//"):
-        try:
-            response = urlopen("http://www.neti.eee")
-            print(response.info())
-            html = response.read()
-            response.close()
-        except urllib.error.HTTPError as error:
-            print("HTTP Connection error ({0}): {1}: {2}".format(error.code, error.reason, error.headers))
-        except urllib.error.URLError as error:
-            print("Oops. URL Error occured: {0}".format(error.reason))
-    else:
-        try:
-            response = urlopen("http://" + item[0])
-            print(response.info())
-            html = response.read()
-            response.close()
-        except urllib.error.HTTPError as error:
-            print("HTTP Connection error ({0}): {1}: {2}".format(error.reason, error.reason, error.headers))
-        except urllib.error.URLError as error:
-            print("Oops. URL {0} error occured: {1}\n".format(item[0], error.reason))
+print("\nScript finished run successfully")
+
+# ------------------------ ENGINE -------------------------

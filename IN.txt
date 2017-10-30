@@ -1,4 +1,4 @@
-www.neti.eee,kool
+www.neti.ee,kool
 www.online.ee,reklaam
-www.seti.ee,maja
+www.seti.eeu,maja
 www.oper.ru
