@@ -16,9 +16,11 @@ from urllib.request import urlopen
 # http://pythoncentral.io/reading-and-writing-to-files-in-python/
 def clear_out_file():
     try:
+        print("Clearing output file {0}".format(output_file_arg))
         file = open(output_file_arg, "w")
         file.truncate()
         file.close()
+        print("Success")
     except OSError:
         print("It was not possible to open/create output file. Check your user privileges.")
         exit(1)
@@ -27,7 +29,9 @@ def clear_out_file():
 # Open file, read lines, split it by comma, and save pairs to list
 def parse_input_file_to_list():
     try:
+        print("Opening input file {0}".format(input_file_arg))
         input_file_object = open(input_file_arg, "r")
+        print("Success")
     except FileNotFoundError as e:
         print("I/O error({0}): {1}".format(e.errno, e.strerror))
         exit(1)
@@ -49,15 +53,17 @@ def writefile(string):
 
 def open_read_url(URL):
     try:
+        print("Opening URL {0}".format(URL))
         response = urlopen(URL)
         # print(response.info())
         html = response.read()
         response.close()
+        print("Success")
         return html
     except urllib.error.HTTPError as error:
         print("HTTP Connection error ({0}): {1}: {2}".format(error.reason, error.reason, error.headers))
     except urllib.error.URLError as error:
-        print("Oops. URL {0} error occured: {1}\n".format(item[0], error.reason))
+        print("Oops. URL {0} error occured: {1}".format(item[0], error.reason))
 
 
 # Add "http://" if it's missing, then try to open URL. Handle HTTP and URL errors.
@@ -102,7 +108,7 @@ for item in input_lines_list:
         URL = create_correct_URL(item[0])
         HTML = open_read_url(URL)
         if HTML == None:
-            print("URL {0} is incorrect or cannot be reached".format(URL))
+            print("URL {0} is incorrect or cannot be reached. Skipping to next URL.".format(URL))
             out_line = "{0}: {1}: {2}\n".format(item[0], item[1], "URL cannot be reached")
             writefile(out_line)
         else:
