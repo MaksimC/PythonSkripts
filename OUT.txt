@@ -1,3 +1,4 @@
 www.neti.ee: kool: YES
 www.online.ee: reklaam: NO
-www.oper.ru: Missing info: NO
+www.seti.eeu: maja: URL cannot be reached
+www.oper.ru: Missing information in input file 

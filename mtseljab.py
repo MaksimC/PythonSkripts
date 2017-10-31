@@ -103,13 +103,15 @@ for item in input_lines_list:
         HTML = open_read_url(URL)
         if HTML == None:
             print("URL {0} is incorrect or cannot be reached".format(URL))
+            out_line = "{0}: {1}: {2}\n".format(item[0], item[1], "URL cannot be reached")
+            writefile(out_line)
         else:
             result = search_html(HTML, item[1])
             out_line = "{0}: {1}: {2}\n".format(item[0], item[1], result)
             writefile(out_line)
     else:
         result = "NO"
-        out_line = "%s: %s: %s\n" % (item[0], "Missing info", result)
+        out_line = "%s: %s \n" % (item[0], "Missing information in input file")
         writefile(out_line)
 
 print("\nScript finished run successfully")
