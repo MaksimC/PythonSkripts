@@ -35,6 +35,7 @@ def clear_out_file(file):
 
 # Read lines, split it by comma, and save pairs to list.
 def parse_input_file_to_list(file):
+    _input_lines_list = []
     print("Opening input file {0}".format(file))
     try:
         input_file_object = open(file, "r")
@@ -43,9 +44,9 @@ def parse_input_file_to_list(file):
         print("I/O error({0}): {1}".format(e.errno, e.strerror))
         exit(1)
     for line in input_file_object:
-        input_lines_list.append(line.strip().split(","))
+        _input_lines_list.append(line.strip().split(","))
     input_file_object.close()
-    return input_lines_list
+    return _input_lines_list
 
 
 # Open and append output file
@@ -60,39 +61,38 @@ def writefile(out_file, string):
 
 
 # Add "http://" if it's missing, then try to open URL. Handle HTTP and URL errors.
-def create_correct_URL(input_link):
+def create_correct_url(input_link):
     if str(input_link).startswith("http://"):
-        URL = input_link
+        _URL = input_link
     else:
-        URL = "http://" + input_link
-    return URL
+        _URL = "http://" + input_link
+    return _URL
 
 
 # Open URL and try to read html
-def open_read_url(URL):
+def open_read_url(url):
     try:
-        print("Opening URL {0}".format(URL))
-        response = urlopen(URL)
+        print("Opening URL {0}".format(url))
+        response = urlopen(url)
         # print(response.info())
         html = response.read()
         response.close()
         print("Success")
         return html
     except urllib.error.HTTPError as error:
-        print("HTTP Connection error ({0}): {1}: {2}".format(URL, error.reason, error.headers))
+        print("HTTP Connection error ({0}): {1}: {2}".format(url, error.reason, error.headers))
     except urllib.error.URLError as error:
         print("Oops. URL {0} error occured: {1}".format(item[0], error.reason))
 
 
 # Search word in html
 def search_html(html, word):
-    result = ""
     string = str(html)
     if string.find(word) != -1:
-        result = "YES"
+        _result = "YES"
     else:
-        result = "NO"
-    return result
+        _result = "NO"
+    return _result
 
 
 # ------------------------ ENGINE -------------------------
@@ -104,7 +104,6 @@ if len(sys.argv) != 1:
 
 input_file_arg = "IN.txt"
 output_file_arg = "OUT.txt"
-input_lines_list = []
 
 # Start run with clearing OUT file
 clear_out_file(output_file_arg)
@@ -115,9 +114,9 @@ input_lines_list = parse_input_file_to_list(input_file_arg)
 # Check if html data is present and search in html
 for item in input_lines_list:
     if len(item) == 2:
-        URL = create_correct_URL(item[0])
+        URL = create_correct_url(item[0])
         HTML = open_read_url(URL)
-        if HTML == None:
+        if HTML is None:
             print("URL {0} is incorrect or cannot be reached. Skipping to next URL.".format(URL))
             out_line = "{0}: {1}: {2}\n".format(item[0], item[1], "URL cannot be reached")
             writefile(output_file_arg, out_line)
