@@ -11,7 +11,6 @@ Usage:
 Install python 3.5 on your machine.
 Run script with SUDO privileges as follows:
 ./mtseljab.py [INPUT FILE] [OUTPUT FILE]
-
 """
 
 import sys
