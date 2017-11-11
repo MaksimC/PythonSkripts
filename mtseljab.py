@@ -38,13 +38,13 @@ def parse_input_file_to_list(file):
     print("Opening input file {0}".format(file))
     try:
         input_file_object = open(file, "r")
+        for line in input_file_object:
+            _input_lines_list.append(line.strip().split(","))
+        input_file_object.close()
         print("Success")
     except FileNotFoundError as e:
         print("I/O error({0}): {1}".format(e.errno, e.strerror))
         exit(1)
-    for line in input_file_object:
-        _input_lines_list.append(line.strip().split(","))
-    input_file_object.close()
     return _input_lines_list
 
 
