@@ -1,4 +1,5 @@
-www.neti.ee: kool: YES
-www.online.ee: reklaam: NO
-www.seti.eeu: maja: URL cannot be reached
-www.oper.ru: Missing information in input file 
+http://www.itcollege.ee/: kool: YES
+http://www.postimees.ee/: reklaam: YES
+http://www.neti.ee: mingi asi: NO
+https://www.google.com: test: YES
+http://itcolllllege.ee: seda pole olemas: URL cannot be reached

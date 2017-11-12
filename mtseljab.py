@@ -61,7 +61,7 @@ def writefile(out_file, string):
 
 # Add "http://" if it's missing, then try to open URL. Handle HTTP and URL errors.
 def create_correct_url(input_link):
-    if str(input_link).startswith("http://"):
+    if str(input_link).startswith("http://") or str(input_link).startswith("https://"):
         _URL = input_link
     else:
         _URL = "http://" + input_link
@@ -101,7 +101,7 @@ if len(sys.argv) != 1:
     print("Usage:\n ./mtseljab.py [INPUT FILE] [OUTPUT FILE]")
     exit(1)
 
-input_file_arg = "IN.txt"
+input_file_arg = "sisend.txt"
 output_file_arg = "OUT.txt"
 
 # Start run with clearing OUT file
