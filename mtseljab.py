@@ -107,7 +107,7 @@ output_file_arg = "OUT.txt"
 # Start run with clearing OUT file
 clear_out_file(output_file_arg)
 
-# Try to parse input file
+# Parse input file to list
 input_lines_list = parse_input_file_to_list(input_file_arg)
 
 # Check if html data is present and search in html
