@@ -39,7 +39,8 @@ def parse_input_file_to_list(file):
     try:
         input_file_object = open(file, "r")
         for line in input_file_object:
-            _input_lines_list.append(line.strip().split(","))
+            if len(line.strip()) != 0:
+                _input_lines_list.append(line.strip().split(","))
         input_file_object.close()
         print("Success")
     except FileNotFoundError as e:
